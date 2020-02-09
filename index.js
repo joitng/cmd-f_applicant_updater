@@ -8,13 +8,15 @@ const web = new WebClient(envKey);
 (async () => {
 
   try {
+
+    var numRows = await sheets.loadCredentials();
+
     await web.chat.postMessage({
       channel: '#test-channel',
-      text: ':sparkles: current number of applications: ' + sheets.numRows + ':sparkles:',
+      text: ':sparkles: current number of applications: ' + numRows + ':sparkles:',
     });
   } catch (error) {
     console.log(error);
   }
-
-  console.log('Message posted!');
+  
 })();

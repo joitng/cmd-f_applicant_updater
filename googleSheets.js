@@ -12,12 +12,22 @@ const TOKEN_PATH = 'token.json';
 var numRows = 0;
 exports.numRows = numRows;
 
-// Load client secrets from a local file.
-fs.readFile('credentials.json', (err, content) => {
-  if (err) return console.log('Error loading client secret file:', err);
-  // Authorize a client with credentials, then call the Google Sheets API.
-  authorize(JSON.parse(content), countRows);
-});
+module.exports = {
+    loadCredentials: function () {
+        fs.readFile('credentials.json', (err, content) => {
+            if (err) return console.log('Error loading client secret file:', err);
+            // Authorize a client with credentials, then call the Google Sheets API.
+            authorize(JSON.parse(content), countRows);
+        });
+    
+        return new Promise(resolve => {
+            setTimeout(() => {
+              resolve(numRows);
+            }, 2000);
+        });
+    },
+};
+
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -72,7 +82,7 @@ function getNewToken(oAuth2Client, callback) {
 function countRows(auth) {
     const sheets = google.sheets({version: 'v4', auth});
     sheets.spreadsheets.values.get({
-        spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms', // !!!
+        spreadsheetId: '1uXtOpHCdq_lbv7GRK8X5jrYpMMvQdTD_J8tWI00qdys', // !!!
         range: 'A2:E',
     }, (err, result) => {
         if (err) return console.log('The API returned an error: ' + err);
